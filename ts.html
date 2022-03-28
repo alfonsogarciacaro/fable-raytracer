@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Fable RayTracer</title>
+</head>
+
+<body>
+  <canvas id="scene" width="1024" height="1024"></canvas>
+  <pre id="results"></pre>
+
+  <script type="module">
+    import render from "./src/ts_raytracer.js";
+
+    function measureTime(f) {
+      const t0 = performance.now();
+      let res = f();
+      const t1 = performance.now();
+      return [res, t1 - t0];
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }    
+
+    const [x, y, w, h] = [0, 0, 1024, 1024];
+
+    const scene = document.getElementById("scene");
+    const results = document.getElementById("results");
+    const ctx = scene.getContext("2d");
+
+    async function bench() {
+      results.innerText = "Raytracer running...";
+      await sleep(10);
+      const [_, elapsed] = measureTime(() => render(ctx, x, y, w, h));
+      results.innerText = "Ray tracing done:\n" +
+      ` - rendered image size: (${w}x${h})\n - elapsed: ${elapsed} ms`;
+    }
+
+    await bench();
+  </script>
+
+  <script>
+
+  </script>
+
+</body>
+
+</html>
